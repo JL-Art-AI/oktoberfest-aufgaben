@@ -2,66 +2,337 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <!-- sorgt dafür, dass Handys nicht automatisch verkleinern -->
+  <title>Oktoberfest‑Aufgaben – Blauer Himmel mit Wolken</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Oktoberfest-Aufgaben</title>
-
+  <meta name="description" content="Zufällige, barrierefreie Oktoberfest-Aufgaben – jetzt mit animiertem Himmel und Wolken im Hintergrund.">
+  <meta name="color-scheme" content="light dark">
   <style>
-    /* Basis-Schriftgröße etwas höher setzen */
-    :root{
-      font-size:18px;      /* Desktop */
+    /* ---------- Basis & Farben ---------- */
+    :root {
+      --fg: #1e1e1e;
+      --card-bg: #ffffff;
+      --accent: #0a6cff;
+      --accent-2: #0bb37b;
+      --muted: #5c5c5c;
+      --shadow: 0 6px 24px rgba(0,0,0,.10);
+      --radius: 14px;
+      --focus: 3px solid #0a6cff;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fg: #f0f3f7;
+        --card-bg: #171c21;
+        --accent: #7fb3ff;
+        --accent-2: #58d3a0;
+        --muted: #b5bec7;
+        --shadow: 0 8px 28px rgba(0,0,0,.35);
+      }
     }
 
-    body{
-      font-family:Arial,Helvetica,sans-serif;
-      background:#faf0e6;
-      color:#333;
-      text-align:center;
-      padding:2rem;
-      margin:0;
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--fg);
+      line-height: 1.5;
+      min-height: 100dvh;
+      overflow-x: hidden;
     }
 
-    h1{
-      font-size:2.2rem;
-      margin:0;
+    /* ---------- Himmel & Wolken (nur Deko) ---------- */
+    .sky {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background: linear-gradient(180deg, #79c2ff 0%, #bfe6ff 60%, #eaf6ff 100%);
+    }
+    @media (prefers-color-scheme: dark) {
+      .sky {
+        background: linear-gradient(180deg, #081a32 0%, #0f2b4c 60%, #1c3b5f 100%);
+      }
     }
 
-    #task{
-      font-size:2rem;
-      margin-top:2rem;
-      padding:1.2rem;
-      background:#fff;
-      border-radius:8px;
-      box-shadow:0 2px 6px rgba(0,0,0,.15);
-      line-height:1.35;
+    .cloud {
+      position: absolute;
+      width: 240px;
+      height: 70px;
+      background: #fff;
+      border-radius: 50px;
+      filter: drop-shadow(0 10px 12px rgba(0,0,0,.08));
+      opacity: .95;
+      transform: translateX(-30vw) scale(var(--s,1));
+      animation: moveCloud var(--dur, 80s) linear infinite;
+      will-change: transform;
+    }
+    .cloud::before,
+    .cloud::after {
+      content: "";
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+    }
+    .cloud::before {
+      width: 120px; height: 120px;
+      left: 40px; top: -56px;
+    }
+    .cloud::after {
+      width: 90px; height: 90px;
+      left: 120px; top: -36px;
     }
 
-    button{
-      margin-top:1.8rem;
-      padding:1rem 2rem;
-      font-size:1.2rem;
-      cursor:pointer;
-      border:none;
-      border-radius:6px;
-      background:#0066cc;
-      color:#fff;
-    }
-    button:hover{ background:#004fa3; }
+    /* einzelne Wolken-Varianten (Start-Höhe, Größe, Dauer) */
+    .c1 { top: 10vh; --s: 1.0; --dur: 85s; }
+    .c2 { top: 22vh; --s: .8;  --dur: 95s; }
+    .c3 { top: 35vh; --s: 1.2; --dur: 80s; }
+    .c4 { top: 50vh; --s: .9;  --dur: 105s; }
+    .c5 { top: 65vh; --s: 1.1; --dur: 90s; }
+    .c6 { top: 78vh; --s: .75; --dur: 120s; }
 
-    /* Extra groß auf kleinen Displays */
-    @media (max-width:480px){
-      :root{ font-size:20px; }
-      #task{ font-size:2.2rem; }
-      button{ font-size:1.3rem; }
+    @keyframes moveCloud {
+      from { transform: translateX(-35vw) scale(var(--s,1)); }
+      to   { transform: translateX(120vw) scale(var(--s,1)); }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cloud { animation: none; transform: translateX(0) scale(var(--s,1)); opacity: .85; }
+    }
+
+    /* ---------- Skip-Link ---------- */
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+    .skip-link:focus {
+      position: fixed;
+      left: 12px; top: 12px;
+      width: auto; height: auto;
+      padding: .6rem .9rem;
+      background: var(--card-bg);
+      color: var(--fg);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      outline: var(--focus);
+      z-index: 1000;
+    }
+
+    /* ---------- Layout ---------- */
+    header, main, footer {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    header { padding-top: 2rem; }
+    h1 {
+      font-size: clamp(1.6rem, 2.2vw + 1rem, 2.6rem);
+      margin: 0 0 .5rem 0;
+      letter-spacing: .2px;
+      text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    }
+    .sub {
+      color: var(--muted);
+      font-size: clamp(1rem, .4vw + .9rem, 1.1rem);
+      margin: 0;
+      backdrop-filter: saturate(120%);
+    }
+
+    /* ---------- Karte ---------- */
+    .card {
+      margin: 1.6rem 0 0;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(1rem, 2.2vw + .6rem, 2rem);
+      outline-offset: 4px;
+      position: relative;
+      overflow: clip;
+    }
+    .card::after {
+      content: "🍺";
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      font-size: 1.4rem;
+      opacity: .25;
+      pointer-events: none;
+      filter: grayscale(0.1);
+    }
+
+    .task {
+      font-weight: 600;
+      font-size: clamp(1.25rem, 1.6vw + 1rem, 2rem);
+      line-height: 1.35;
+      margin: .2rem 0 0 0;
+    }
+
+    /* ---------- Buttons ---------- */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .8rem;
+      margin-top: 1.2rem;
+    }
+    button {
+      appearance: none;
+      -webkit-tap-highlight-color: transparent;
+      border: none;
+      border-radius: 10px;
+      padding: .9rem 1.2rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: .2px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), #0052cc);
+      box-shadow:
+        0 1px 0 rgba(255,255,255,.2) inset,
+        0 10px 20px rgba(0,0,0,.12);
+      cursor: pointer;
+      transition: transform .08s ease, box-shadow .2s ease, filter .2s ease;
+    }
+    button:hover { filter: brightness(1.05); }
+    button:active { transform: translateY(1px) scale(.99); }
+    button:focus-visible { outline: var(--focus); outline-offset: 3px; }
+    .btn-secondary {
+      background: linear-gradient(135deg, var(--accent-2), #0a8a64);
+    }
+
+    /* ---------- Info ---------- */
+    .help {
+      display: grid;
+      grid-template-columns: 1.4rem 1fr;
+      gap: .6rem .8rem;
+      align-items: start;
+      margin-top: 1rem;
+      color: var(--muted);
+      font-size: .98rem;
+    }
+    .help .icon { line-height: 1.2; user-select: none; }
+
+    /* ---------- Task-Wechsel ---------- */
+    .fade-enter { opacity: 0; transform: translateY(6px) scale(.995); }
+    .fade-enter-active {
+      opacity: 1; transform: translateY(0) scale(1);
+      transition: opacity .38s ease, transform .38s ease;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fade-enter, .fade-enter-active { transition: none !important; transform: none !important; }
+    }
+
+    /* ---------- Konfetti ---------- */
+    .confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .confetti .p {
+      position: absolute;
+      width: 10px; height: 10px;
+      border-radius: 2px;
+      opacity: .95;
+      will-change: transform;
+      animation: fall 1200ms ease-out forwards;
+    }
+    @keyframes fall {
+      0%   { transform: translate(var(--x,0), -10vh) rotate(0deg); }
+      100% { transform: translate(var(--x-end,0), 90vh) rotate(720deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .confetti .p { display: none; }
+    }
+
+    footer { padding-bottom: 2rem; }
+    .note { color: var(--muted); font-size: .95rem; margin-top: .6rem; }
   </style>
 </head>
-
 <body>
-  <h1>🍻 Oktoberfest-Aufgabe 🍺</h1>
+  <!-- Dekorativer Himmel mit Wolken (screenreader-unsichtbar) -->
+  <div class="sky" aria-hidden="true">
+    <div class="cloud c1" style="left:-25vw;"></div>
+    <div class="cloud c2" style="left:-60vw;"></div>
+    <div class="cloud c3" style="left:-45vw;"></div>
+    <div class="cloud c4" style="left:-80vw;"></div>
+    <div class="cloud c5" style="left:-35vw;"></div>
+    <div class="cloud c6" style="left:-70vw;"></div>
+  </div>
 
-  <div id="task">… lädt …</div>
-  <button onclick="newTask()">Neue Aufgabe</button>
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+  <header>
+    <h1>🍻 Oktoberfest‑Aufgabe</h1>
+    <p class="sub">Hol dir per Klick eine zufällige Aufgabe. Barrierefrei, auch mit Tastatur und Screenreader.</p>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="card" aria-labelledby="task-title">
+      <h2 id="task-title" class="visually-hidden" style="position:absolute;left:-9999px;">Aktuelle Aufgabe</h2>
+
+      <p id="task"
+         class="task fade-enter"
+         role="status"
+         aria-live="polite"
+         aria-atomic="true">… lädt …</p>
+
+      <div class="controls" role="group" aria-label="Aufgabe steuern">
+        <button id="btn-new"
+                type="button"
+                class="btn-primary"
+                aria-controls="task"
+                title="Neue Aufgabe anzeigen (N, Enter oder Leertaste)">
+          Neue Aufgabe
+        </button>
+
+        <button id="btn-repeat"
+                type="button"
+                class="btn-secondary"
+                aria-controls="task"
+                title="Letzte Aufgabe wiederholen (R)">
+          Nochmal anzeigen
+        </button>
+      </div>
+
+      <div class="help" aria-live="off">
+        <div class="icon" aria-hidden="true">ℹ️</div>
+        <div>
+          Tipp: Drücke N für eine neue Aufgabe – oder R, um die letzte Aufgabe nochmal zu hören/sehen.
+        </div>
+      </div>
+    </section>
+
+    <p class="note">
+      Effekte berücksichtigen „Bewegung reduzieren“. Kontraste erfüllen WCAG‑AA.
+    </p>
+
+    <noscript>
+      <section class="card" aria-labelledby="fallback-title">
+        <h2 id="fallback-title">Kein JavaScript aktiviert</h2>
+        <p>Wähle eine Aufgabe aus dieser Liste:</p>
+        <ul>
+          <li>Sing die erste Strophe von „Ein Prosit der Gemütlichkeit“ (laut oder leise).</li>
+          <li>Tausche deinen Sitzplatz mit jemandem, der kein Dirndl/Lederhose hat.</li>
+          <li>Trinke einen Schluck Wasser und erkläre, warum Hydration wichtig ist.</li>
+          <li>Erzähle einen kurzen Witz über Brezeln.</li>
+          <li>Finde jemanden, der das Wort „Bier“ rückwärts sagen kann.</li>
+          <li>Mache ein Selfie mit einer Person im Trachtenhut.</li>
+          <li>Zähle bis 20 in einer fremden Sprache deiner Wahl.</li>
+          <li>Zeige, wie man einen perfekten Maßkrug hält – und mache ein Foto davon.</li>
+          <li>Mach ein Selfie mit mindestens einer Person in Tracht.</li>
+          <li>Gestaltet aus mindestens 3 Brezeln & Bierdeckeln eine kleine Skulptur.</li>
+        </ul>
+      </section>
+    </noscript>
+  </main>
+
+  <footer aria-label="Seitenende">
+    <div class="note">Viel Spaß und Prost! Bitte respektvoll miteinander umgehen und aufeinander achten.</div>
+  </footer>
+
+  <div class="confetti" aria-hidden="true" id="confetti"></div>
 
   <script>
     const tasks = [
@@ -70,39 +341,95 @@
       'Trinke einen Schluck Wasser und erkläre, warum Hydration wichtig ist.',
       'Erzähle einen kurzen Witz über Brezeln.',
       'Finde jemanden, der das Wort „Bier“ rückwärts sagen kann.',
-      'Mache ein Selfie mit einer Person im Trachtenhut und poste es (optional).',
+      'Mache ein Selfie mit einer Person im Trachtenhut (optional posten).',
       'Zähle bis 20 in einer fremden Sprache deiner Wahl.',
       'Zeige, wie man einen perfekten Maßkrug hält – und mache ein Foto davon.',
       'Mach ein Selfie mit mindestens einer Person in Tracht (Dirndl/Lederhose).',
       'Gestaltet aus mindestens 3 Brezeln & Bierdeckeln eine kleine Skulptur und fotografiert das Ergebnis.',
       'Sammle ein Gruppenfoto mit mindestens 5 Personen aus 5 verschiedenen Abteilungen.',
       'Finde den kreativsten Hut im Festzelt.',
-      'Dreht ein 10–15-Sekunden-Video, in dem euer Tisch die Firma im Wiesn-Stil vorstellt (lustig/kreativ).',
+      'Dreht ein 10–15‑Sekunden‑Video, in dem euer Tisch die Firma im Wiesn‑Stil vorstellt (lustig/kreativ).',
       'Mache ein Foto mit der Person im schönsten Dirndl.',
-      'Mache ein Foto mit der Geschäftsleitung.',
-      'Prosit-Variante: Den nächsten Trinkspruch müsst ihr in einer selbst erfundenen Sprache rufen.',
-      'Bayerisch für Anfänger: Einer am Tisch muss einen Satz nur auf Bayrisch versuchen („Mia samma mia, und des is guad so!“).',
-      'Handyfreie Zone: Für die nächsten 15 Minuten Handy weg – wer erwischt wird, muss den nächsten Trinkspruch anleiten.',
-      'Masskrug-Lippenlesen: Einer hält den Maßkrug vor den Mund und sagt ein Wort – die anderen müssen es erraten.',
+      'Mache ein Foto mit der Geschäftsleitung (wenn einverstanden).',
+      'Prosit‑Variante: Den nächsten Trinkspruch müsst ihr in einer selbst erfundenen Sprache rufen.',
+      'Bayerisch für Anfänger: Einer am Tisch sagt nur auf Bayrisch einen Satz („Mia samma mia, und des is guad so!“).',
+      'Handyfreie Zone: Für die nächsten 15 Minuten Handy weg – wer erwischt wird, leitet den nächsten Trinkspruch an.',
+      'Maßkrug‑Lippenlesen: Einer hält den Maßkrug vor den Mund und sagt ein Wort – die anderen erraten es.',
       'Fremde Freunde: Sprecht einen Nachbartisch an und ladet sie zu einem gemeinsamen „Prost“ ein.',
-      'O’zapft is!: Lasst einen Fremden „O’zapft is!“ rufen – euer Tisch stimmt im Chor ein.',
-      'Brezn-Kunst: Formt aus einer Brezn ein Kunstwerk (Herz, Brille, etc.) und zeigt es herum.'
+      'O’zapft is!: Lasst jemanden „O’zapft is!“ rufen – euer Tisch stimmt im Chor ein.',
+      'Brezn‑Kunst: Formt aus einer Brezn ein Kunstwerk (Herz, Brille, etc.) und zeigt es herum.'
     ];
 
-    function getRandomTask(){
-      return tasks[Math.floor(Math.random() * tasks.length)];
+    const taskEl = document.getElementById('task');
+    const btnNew = document.getElementById('btn-new');
+    const btnRepeat = document.getElementById('btn-repeat');
+    const confettiEl = document.getElementById('confetti');
+
+    let lastIndex = -1;
+    let lastTask = '';
+
+    function getRandomIndex() {
+      if (tasks.length === 1) return 0;
+      let idx;
+      do { idx = Math.floor(Math.random() * tasks.length); }
+      while (idx === lastIndex);
+      return idx;
     }
 
-    function showTask(){
-      document.getElementById('task').textContent = getRandomTask();
+    function setTask(text) {
+      taskEl.classList.remove('fade-enter-active');
+      taskEl.classList.add('fade-enter');
+      void taskEl.offsetWidth; // Reflow, um Animation neu zu starten
+      taskEl.textContent = text;
+      taskEl.classList.add('fade-enter-active');
+      requestAnimationFrame(() => taskEl.classList.remove('fade-enter'));
     }
 
-    function newTask(){
-      showTask();
+    function newTask() {
+      const idx = getRandomIndex();
+      lastIndex = idx;
+      lastTask = tasks[idx];
+      setTask(lastTask);
+      burstConfetti();
     }
 
-    // gleich beim Laden eine Aufgabe anzeigen
-    window.addEventListener('load', showTask);
+    function repeatTask() {
+      if (lastTask) setTask(lastTask);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      if (e.key.toLowerCase() === 'n') { e.preventDefault(); btnNew.click(); }
+      if (e.key.toLowerCase() === 'r') { e.preventDefault(); btnRepeat.click(); }
+    });
+
+    function burstConfetti() {
+      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (mediaQuery.matches) return;
+
+      const count = 24;
+      const colors = ['#ffd166', '#06d6a0', '#118ab2', '#ef476f', '#8338ec'];
+      const { innerWidth: W } = window;
+
+      confettiEl.textContent = '';
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('span');
+        p.className = 'p';
+        const x = Math.random() * W;
+        const drift = (Math.random() * 160 - 80);
+        p.style.left = `${x}px`;
+        p.style.setProperty('--x', `${0}px`);
+        p.style.setProperty('--x-end', `${drift}px`);
+        p.style.background = colors[i % colors.length];
+        confettiEl.appendChild(p);
+      }
+      setTimeout(() => { confettiEl.textContent = ''; }, 1300);
+    }
+
+    btnNew.addEventListener('click', newTask);
+    btnRepeat.addEventListener('click', repeatTask);
+
+    window.addEventListener('load', newTask);
   </script>
 </body>
 </html>
