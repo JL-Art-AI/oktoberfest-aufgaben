@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Oktoberfest‑Aufgaben</title>
+<style>
+  body {font-family:Arial,Helvetica,sans-serif; background:#faf0e6; color:#333; text-align:center; padding:2rem;}
+  #task {font-size:1.8rem; margin-top:2rem; padding:1rem; background:#fff; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,.1);}
+  button {margin-top:1.5rem; padding:.8rem 1.5rem; font-size:1rem; cursor:pointer;}
+</style>
+</head>
+<body>
+
+<h1>🍻 Oktoberfest‑Aufgabe 🍺</h1>
+<div id="task">… lädt …</div>
+<button onclick="newTask()">Neue Aufgabe</button>
+
+<script>
+const tasks = [
+  "Stelle dich rechts von jemandem, der ein Dirndl trägt, und sag ihm / ihr ‘Prost!’",
+  "Erzähle in 30 Sekunden, warum das Oktoberfest das beste Fest der Welt ist.",
+  "Sing die erste Strophe von „Ein Prosit der Gemütlichkeit“ (laut oder leise).",
+  "Tausche deinen Sitzplatz mit jemandem, der einen Bollerwagen hat.",
+  "Trinke einen Schluck Wasser und erkläre, warum Hydration wichtig ist.",
+  "Erzähle einen kurzen Witz über Brezeln.",
+  "Finde jemanden, der das Wort „Bier“ rückwärts sagen kann.",
+  "Mache ein Selfie mit einer Person im Trachtenhut und poste es (optional).",
+  "Zähle bis 20 in einer fremden Sprache deiner Wahl.",
+  "Zeige, wie man einen perfekten Maßkrug hält – und mache ein Foto davon."
+];
+
+function getRandomTask() {
+  const idx = Math.floor(Math.random() * tasks.length);
+  return tasks[idx];
+}
+function showTask() {
+  document.getElementById('task').textContent = getRandomTask();
+}
+function newTask() { showTask(); }
+window.onload = showTask;
+</script>
+
+</body>
+</html>
