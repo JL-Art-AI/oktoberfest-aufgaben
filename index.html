@@ -1,44 +1,108 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>Oktoberfest‑Aufgaben</title>
-<style>
-  body {font-family:Arial,Helvetica,sans-serif; background:#faf0e6; color:#333; text-align:center; padding:2rem;}
-  #task {font-size:1.8rem; margin-top:2rem; padding:1rem; background:#fff; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,.1);}
-  button {margin-top:1.5rem; padding:.8rem 1.5rem; font-size:1rem; cursor:pointer;}
-</style>
+  <meta charset="UTF-8">
+  <!-- sorgt dafür, dass Handys nicht automatisch verkleinern -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oktoberfest-Aufgaben</title>
+
+  <style>
+    /* Basis-Schriftgröße etwas höher setzen */
+    :root{
+      font-size:18px;      /* Desktop */
+    }
+
+    body{
+      font-family:Arial,Helvetica,sans-serif;
+      background:#faf0e6;
+      color:#333;
+      text-align:center;
+      padding:2rem;
+      margin:0;
+    }
+
+    h1{
+      font-size:2.2rem;
+      margin:0;
+    }
+
+    #task{
+      font-size:2rem;
+      margin-top:2rem;
+      padding:1.2rem;
+      background:#fff;
+      border-radius:8px;
+      box-shadow:0 2px 6px rgba(0,0,0,.15);
+      line-height:1.35;
+    }
+
+    button{
+      margin-top:1.8rem;
+      padding:1rem 2rem;
+      font-size:1.2rem;
+      cursor:pointer;
+      border:none;
+      border-radius:6px;
+      background:#0066cc;
+      color:#fff;
+    }
+    button:hover{ background:#004fa3; }
+
+    /* Extra groß auf kleinen Displays */
+    @media (max-width:480px){
+      :root{ font-size:20px; }
+      #task{ font-size:2.2rem; }
+      button{ font-size:1.3rem; }
+    }
+  </style>
 </head>
+
 <body>
+  <h1>🍻 Oktoberfest-Aufgabe 🍺</h1>
 
-<h1>🍻 Oktoberfest‑Aufgabe 🍺</h1>
-<div id="task">… lädt …</div>
-<button onclick="newTask()">Neue Aufgabe</button>
+  <div id="task">… lädt …</div>
+  <button onclick="newTask()">Neue Aufgabe</button>
 
-<script>
-const tasks = [
-  "Stelle dich rechts von jemandem, der ein Dirndl trägt, und sag ihm / ihr ‘Prost!’",
-  "Erzähle in 30 Sekunden, warum das Oktoberfest das beste Fest der Welt ist.",
-  "Sing die erste Strophe von „Ein Prosit der Gemütlichkeit“ (laut oder leise).",
-  "Tausche deinen Sitzplatz mit jemandem, der einen Bollerwagen hat.",
-  "Trinke einen Schluck Wasser und erkläre, warum Hydration wichtig ist.",
-  "Erzähle einen kurzen Witz über Brezeln.",
-  "Finde jemanden, der das Wort „Bier“ rückwärts sagen kann.",
-  "Mache ein Selfie mit einer Person im Trachtenhut und poste es (optional).",
-  "Zähle bis 20 in einer fremden Sprache deiner Wahl.",
-  "Zeige, wie man einen perfekten Maßkrug hält – und mache ein Foto davon."
-];
+  <script>
+    const tasks = [
+      'Sing die erste Strophe von „Ein Prosit der Gemütlichkeit“ (laut oder leise).',
+      'Tausche deinen Sitzplatz mit jemandem, der kein Dirndl/Lederhose hat.',
+      'Trinke einen Schluck Wasser und erkläre, warum Hydration wichtig ist.',
+      'Erzähle einen kurzen Witz über Brezeln.',
+      'Finde jemanden, der das Wort „Bier“ rückwärts sagen kann.',
+      'Mache ein Selfie mit einer Person im Trachtenhut und poste es (optional).',
+      'Zähle bis 20 in einer fremden Sprache deiner Wahl.',
+      'Zeige, wie man einen perfekten Maßkrug hält – und mache ein Foto davon.',
+      'Mach ein Selfie mit mindestens einer Person in Tracht (Dirndl/Lederhose).',
+      'Gestaltet aus mindestens 3 Brezeln & Bierdeckeln eine kleine Skulptur und fotografiert das Ergebnis.',
+      'Sammle ein Gruppenfoto mit mindestens 5 Personen aus 5 verschiedenen Abteilungen.',
+      'Finde den kreativsten Hut im Festzelt.',
+      'Dreht ein 10–15-Sekunden-Video, in dem euer Tisch die Firma im Wiesn-Stil vorstellt (lustig/kreativ).',
+      'Mache ein Foto mit der Person im schönsten Dirndl.',
+      'Mache ein Foto mit der Geschäftsleitung.',
+      'Prosit-Variante: Den nächsten Trinkspruch müsst ihr in einer selbst erfundenen Sprache rufen.',
+      'Bayerisch für Anfänger: Einer am Tisch muss einen Satz nur auf Bayrisch versuchen („Mia samma mia, und des is guad so!“).',
+      'Handyfreie Zone: Für die nächsten 15 Minuten Handy weg – wer erwischt wird, muss den nächsten Trinkspruch anleiten.',
+      'Masskrug-Lippenlesen: Einer hält den Maßkrug vor den Mund und sagt ein Wort – die anderen müssen es erraten.',
+      'Fremde Freunde: Sprecht einen Nachbartisch an und ladet sie zu einem gemeinsamen „Prost“ ein.',
+      'O’zapft is!: Lasst einen Fremden „O’zapft is!“ rufen – euer Tisch stimmt im Chor ein.',
+      'Brezn-Kunst: Formt aus einer Brezn ein Kunstwerk (Herz, Brille, etc.) und zeigt es herum.'
+    ];
 
-function getRandomTask() {
-  const idx = Math.floor(Math.random() * tasks.length);
-  return tasks[idx];
-}
-function showTask() {
-  document.getElementById('task').textContent = getRandomTask();
-}
-function newTask() { showTask(); }
-window.onload = showTask;
-</script>
+    function getRandomTask(){
+      return tasks[Math.floor(Math.random() * tasks.length)];
+    }
 
+    function showTask(){
+      document.getElementById('task').textContent = getRandomTask();
+    }
+
+    function newTask(){
+      showTask();
+    }
+
+    // gleich beim Laden eine Aufgabe anzeigen
+    window.addEventListener('load', showTask);
+  </script>
 </body>
 </html>
